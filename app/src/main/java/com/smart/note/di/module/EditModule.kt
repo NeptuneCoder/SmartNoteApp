@@ -1,5 +1,6 @@
-package com.smart.note.dagger2.edit
+package com.smart.note.di.module
 
+import com.smart.note.di.scope.EditScope
 import dagger.Module
 import dagger.Provides
 

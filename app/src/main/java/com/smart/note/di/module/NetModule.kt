@@ -1,11 +1,9 @@
-package com.smart.note.dagger2
+package com.smart.note.di.module
 
 import android.util.Log
-import com.smart.note.App
 import com.smart.note.BuildConfig
+import com.smart.note.di.scope.NetScope
 import com.smart.note.net.ApiService
-import com.smart.note.room.AppDatabase
-import com.smart.note.room.MemoDao
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -15,8 +13,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
+
 @Module
-class AppModule(val app: App) {
+class NetModule {
+    @NetScope
     @Named("apiKey")
     @Provides
     fun provideApiKey(): String {
@@ -24,11 +24,13 @@ class AppModule(val app: App) {
 
     }
 
+    @NetScope
     @Provides
     fun provideLoggerInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
+    @NetScope
     @Provides
     fun provideOkhttpClient(
         @Named("apiKey") apiKey: String,
@@ -47,7 +49,7 @@ class AppModule(val app: App) {
 
     }
 
-    @Singleton
+    @NetScope
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient, url: String): Retrofit {
         Log.i("provideRetrofit", "okHttpClient ==== $okHttpClient")
@@ -58,27 +60,17 @@ class AppModule(val app: App) {
             .build()
     }
 
+    @NetScope
     @Provides
     fun provideDeepSeekUrl(): String {
         Log.i("provideRetrofit", "provideBaseUrl1 ==== base url")
         return "https://api.deepseek.com"
     }
 
-    @Singleton
+    @NetScope
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun provideMemoDao(appDatabase: AppDatabase): MemoDao {
-        return appDatabase.noteDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideAppDatabase(): AppDatabase {
-        return AppDatabase.getDatabase(app)
-    }
 }

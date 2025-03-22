@@ -13,7 +13,7 @@ import com.smart.note.data.Memo
     exportSchema = false // 关闭 Schema 导出（生产环境建议开启）
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun noteDao(): MemoDao
+    abstract fun memoDao(): MemoDao
 
     companion object {
         @Volatile
@@ -24,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "note_database" // 数据库文件名
+                    "smart_note_db" // 数据库文件名
                 ).build()
                 INSTANCE = instance
                 instance

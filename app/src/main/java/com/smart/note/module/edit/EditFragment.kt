@@ -23,6 +23,8 @@ import javax.inject.Inject
  */
 class EditFragment : BaseFragment<FragmentEditBinding>() {
 
+    @Inject
+    lateinit var editViewModel: EditViewModel
     override fun inject() {
         App.appComponent
             .editComponent()
@@ -43,6 +45,8 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
         super.onViewCreated(view, savedInstanceState)
         Log.i("apiService", "apiService === $apiService")
         Log.i("apiService", "memoDao === $memoDao")
+        Log.i("apiService", "editViewModel === $editViewModel")
+
         binding.saveButton.setOnClickListener {
             lifecycleScope.launch {
                 memoDao.insert(Memo(content = "测试内容", md5 = ""))

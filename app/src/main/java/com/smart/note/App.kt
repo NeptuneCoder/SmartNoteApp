@@ -1,9 +1,9 @@
 package com.smart.note
 
 import android.app.Application
-import com.smart.note.dagger2.AppComponent
-import com.smart.note.dagger2.AppModule
-import com.smart.note.dagger2.DaggerAppComponent
+import com.smart.note.di.component.AppComponent
+import com.smart.note.di.module.AppModule
+import com.smart.note.di.component.DaggerAppComponent
 
 class App : Application() {
     companion object {

@@ -2,6 +2,7 @@ package com.smart.note.dagger2
 
 import android.util.Log
 import com.smart.note.App
+import com.smart.note.BuildConfig
 import com.smart.note.net.ApiService
 import com.smart.note.room.AppDatabase
 import com.smart.note.room.MemoDao
@@ -19,7 +20,8 @@ class AppModule(val app: App) {
     @Named("apiKey")
     @Provides
     fun provideApiKey(): String {
-        return "sk-"
+        return BuildConfig.DEEPSEEK_API_KEY
+
     }
 
     @Provides

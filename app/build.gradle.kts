@@ -2,6 +2,7 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -10,6 +11,10 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+// 读取 local.properties
+val localProperties = File(rootProject.projectDir, "local.properties").inputStream().use {
+    Properties().apply { load(it) }
+}
 android {
     namespace = "com.smart.note"
     compileSdk = 35
@@ -22,6 +27,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // 将变量注入 BuildConfig
+        buildConfigField(
+            "String",
+            "DEEPSEEK_API_KEY",
+            "\"${localProperties.getProperty("deepseek.api.key")}\""
+        )
     }
 
     buildTypes {
@@ -42,6 +54,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     // 自定义输出文件名
     applicationVariants.all {

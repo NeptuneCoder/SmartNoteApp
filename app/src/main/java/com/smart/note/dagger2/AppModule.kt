@@ -1,7 +1,6 @@
 package com.smart.note.dagger2
 
 import android.util.Log
-import com.smart.note.data.Memo
 import com.smart.note.net.ApiService
 import dagger.Module
 import dagger.Provides

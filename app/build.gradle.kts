@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     // Dagger 核心库
     implementation(libs.dagger)
+    implementation(project(":basic"))
     kapt(libs.dagger.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)  // 使用最新版本
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.smart.basic.BaseFragment
 import com.smart.note.R
 
 import com.smart.note.databinding.FragmentSettingBinding
@@ -13,23 +14,14 @@ import com.smart.note.databinding.FragmentSettingBinding
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class SettingFragment : Fragment() {
-
-    private var _binding: FragmentSettingBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        _binding = FragmentSettingBinding.inflate(inflater, container, false)
-        return binding.root
-
+class SettingFragment : BaseFragment<FragmentSettingBinding>() {
+    override fun initBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSettingBinding {
+        return FragmentSettingBinding.inflate(inflater, container, false)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,8 +31,5 @@ class SettingFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

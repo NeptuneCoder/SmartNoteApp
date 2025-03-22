@@ -17,6 +17,7 @@
         <action
             android:id="@+id/action_HomeFragment_to_SettingFragment"
             app:destination="@id/SettingFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/EditFragment"

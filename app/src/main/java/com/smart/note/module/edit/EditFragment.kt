@@ -13,6 +13,7 @@ import com.smart.note.App
 import com.smart.note.R
 import com.smart.note.data.Memo
 import com.smart.note.databinding.FragmentEditBinding
+import com.smart.note.ext.md5
 import com.smart.note.net.ApiService
 import com.smart.note.room.MemoDao
 import kotlinx.coroutines.launch
@@ -49,7 +50,7 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
 
         binding.saveButton.setOnClickListener {
             lifecycleScope.launch {
-                memoDao.insert(Memo(content = "测试内容", md5 = ""))
+                memoDao.insert(Memo(content = "测试内容", md5 = "测试内容".md5()))
             }
         }
     }

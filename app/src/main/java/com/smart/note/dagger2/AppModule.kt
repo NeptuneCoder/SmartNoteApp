@@ -8,16 +8,41 @@ import com.smart.note.room.MemoDao
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 class AppModule(val app: App) {
+    @Named("apiKey")
+    @Provides
+    fun provideApiKey(): String {
+        return "sk-"
+    }
 
     @Provides
-    fun provideOkhttpClient(): OkHttpClient {
-        return OkHttpClient()
+    fun provideLoggerInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Provides
+    fun provideOkhttpClient(
+        @Named("apiKey") apiKey: String,
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder().addInterceptor { chain ->
+            val original = chain.request()
+            val request = original.newBuilder()
+                .header("Authorization", "Bearer $apiKey")
+                .header("Content-Type", "application/json")
+                .method(original.method, original.body)
+                .build()
+            chain.proceed(request)
+        }.addInterceptor(loggingInterceptor)
+            .build()
+
     }
 
     @Singleton
@@ -32,9 +57,9 @@ class AppModule(val app: App) {
     }
 
     @Provides
-    fun provideBaseUrl1(): String {
+    fun provideDeepSeekUrl(): String {
         Log.i("provideRetrofit", "provideBaseUrl1 ==== base url")
-        return "http://baidu.com"
+        return "https://api.deepseek.com"
     }
 
     @Singleton

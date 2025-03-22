@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     @Inject
-    lateinit var apiService:ApiService
+    lateinit var apiService: ApiService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.appComponent.inject(this)
@@ -41,9 +41,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+            navController.navigate(R.id.action_HomeFragment_to_EditFragment)
         }
     }
 

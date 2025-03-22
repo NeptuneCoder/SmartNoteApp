@@ -24,18 +24,16 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
 
     }
 
+    //findNavController().navigate(R.id.action_HomeFragment_to_EditFragment)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_HomeFragment_to_EditFragment)
-        }
+
     }
 
     override fun onDestroyView() {

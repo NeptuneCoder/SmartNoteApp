@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.smart.note.fragment.HomeFragment"
+        android:name="com.smart.note.module.main.HomeFragment"
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
 
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/EditFragment"
-        android:name="com.smart.note.fragment.EditFragment"
+        android:name="com.smart.note.module.edit.EditFragment"
         android:label="@string/edit_fragment_label"
         tools:layout="@layout/fragment_edit">
 
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/SettingFragment"
-        android:name="com.smart.note.fragment.SettingFragment"
+        android:name="com.smart.note.module.setting.SettingFragment"
         android:label="@string/setting_fragment_label"
         tools:layout="@layout/fragment_setting">
 

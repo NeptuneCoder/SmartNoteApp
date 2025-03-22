@@ -1,4 +1,4 @@
-package com.smart.note.fragment
+package com.smart.note.module.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,7 +22,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     //findNavController().navigate(R.id.action_HomeFragment_to_EditFragment)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.fab.setOnClickListener { view ->
+            findNavController().navigate(R.id.action_HomeFragment_to_EditFragment)
+        }
 
     }
 

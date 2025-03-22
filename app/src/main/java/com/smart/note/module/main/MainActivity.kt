@@ -1,8 +1,6 @@
-package com.smart.note.main
+package com.smart.note.module.main
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,38 +9,23 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import com.smart.note.App
 import com.smart.note.R
-import com.smart.note.dagger2.DaggerAppComponent
-import com.smart.note.data.Memo
 import com.smart.note.databinding.ActivityMainBinding
-import com.smart.note.net.ApiService
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var navController: NavController
-
-    @Inject
-    lateinit var apiService: ApiService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.appComponent.inject(this)
         setContentView(binding.root)
-        Log.i("MainActivity", "MainActivity apiService === $apiService")
         setSupportActionBar(binding.toolbar)
-
-
         navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.fab.setOnClickListener { view ->
-            navController.navigate(R.id.action_HomeFragment_to_EditFragment)
-        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

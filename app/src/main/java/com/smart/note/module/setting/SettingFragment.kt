@@ -1,4 +1,4 @@
-package com.smart.note.fragment
+package com.smart.note.module.setting
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

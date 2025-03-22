@@ -16,12 +16,16 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
 
     // 抽象方法，子类必须实现如何创建 Binding 对象
     protected abstract fun initBinding(inflater: LayoutInflater, container: ViewGroup?): T
+    open fun inject() {
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        inject()
         _binding = initBinding(inflater, container)
         return binding.root
     }

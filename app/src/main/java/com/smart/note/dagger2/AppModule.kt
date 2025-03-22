@@ -1,7 +1,10 @@
 package com.smart.note.dagger2
 
 import android.util.Log
+import com.smart.note.App
 import com.smart.note.net.ApiService
+import com.smart.note.room.AppDatabase
+import com.smart.note.room.MemoDao
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -10,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class AppModule {
+class AppModule(val app: App) {
 
     @Provides
     fun provideOkhttpClient(): OkHttpClient {
@@ -40,5 +43,15 @@ class AppModule {
         return retrofit.create(ApiService::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideMemoDao(appDatabase: AppDatabase): MemoDao {
+        return appDatabase.noteDao()
+    }
 
+    @Singleton
+    @Provides
+    fun provideAppDatabase(): AppDatabase {
+        return AppDatabase.getDatabase(app)
+    }
 }

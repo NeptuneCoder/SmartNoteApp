@@ -23,6 +23,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="16dp"
             android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/dimen_dp_4"
             android:maxLines="6"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_sp_16"

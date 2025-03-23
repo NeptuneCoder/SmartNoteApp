@@ -104,6 +104,7 @@ dependencies {
     // 支持原始数据流解析
     implementation(libs.converter.scalars)
     implementation(libs.logging.interceptor) // 可选，日志拦截器
+    implementation(libs.retrofit2.kotlin.coroutines.adapter)
 
     implementation(libs.xx)
 

@@ -124,10 +124,10 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         }
         lifecycleOnRepeat {
             detailViewModel.aiSummaryFlow.collect {
-                if (it.isNotEmpty()) {
+                if (it.second.isNotEmpty()) {
                     MaterialAlertDialogBuilder(requireActivity())
                         .setTitle("总结内容")
-                        .setMessage(it)
+                        .setMessage(it.second)
                         .setPositiveButton("收藏") { _, _ ->
                             // 确定按钮点击事件
                             detailViewModel.collection(memoId) {

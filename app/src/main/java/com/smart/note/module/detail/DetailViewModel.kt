@@ -16,6 +16,9 @@ import com.smart.note.room.MemoDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Dispatcher
@@ -29,7 +32,8 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
     private val _dataFlow = MutableStateFlow<Memo?>(null)
     val dataFlow = _dataFlow.asStateFlow()
 
-    private val _aiSummaryFlow = MutableStateFlow<String>("")
+
+    private val _aiSummaryFlow = MutableStateFlow<Pair<State, String>>(State.Default to "")
     val aiSummaryFlow = _aiSummaryFlow.asStateFlow()
 
     @Inject
@@ -70,16 +74,31 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
         viewModelScope.launch {
             val data = memoDao.getMemoById(id)
             if (data?.aiSummary?.isEmpty() == true) {
-                val res = chatRepository.sendMessage("帮我总结一下内容:${data.content}")
-                Log.i("chatRepository", "chatRepository res ==== $res")
-                if (res.choices.isNotEmpty()) {
-                    _aiSummaryFlow.value = res.choices[0].message.content
-                } else {
-                    _aiSummaryFlow.value = "没有内容"
-                }
+                chatRepository.sendMessage("帮我总结一下内容:${data.content}")
+                    .onStart {
+                        Log.i("chatRepository", "onStart")
+                        _aiSummaryFlow.value = State.Loading to ""
+                    }
+                    .onCompletion {
+                        Log.i("chatRepository", "onCompletion")
+                    }
+                    .catch {
+                        Log.i("chatRepository", "catch")
+                        _aiSummaryFlow.value = State.Error to ""
+                    }
+                    .collect {
+                        Log.i("chatRepository", "chatRepository res ==== $it")
+                        if (it.choices.isNotEmpty()) {
+                            _aiSummaryFlow.value = State.Complete to it.choices[0].message.content
+                        } else {
+                            _aiSummaryFlow.value = State.Complete to "没有内容"
+                        }
+                    }
+
+
             } else {
-                _aiSummaryFlow.value = ""
-                _aiSummaryFlow.value = data?.aiSummary ?: "没有内容"
+                _aiSummaryFlow.value = State.Complete to ""
+                _aiSummaryFlow.value = State.Complete to (data?.aiSummary ?: "没有内容")
             }
 
 
@@ -88,7 +107,7 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
     }
 
     fun collection(id: Int, call: () -> Unit) {
-        val summary = _aiSummaryFlow.value
+        val summary = _aiSummaryFlow.value.second
         if (summary.isNotEmpty()) {
             viewModelScope.launch {
                 val data = memoDao.getMemoById(id)

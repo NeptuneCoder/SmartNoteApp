@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,6 +29,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
 
     @Inject
     lateinit var detailViewModel: DetailViewModel
+
+
+    var loadAiSummaryDialog: AlertDialog? = null
     override fun inject() {
         super.inject()
         App.appComponent
@@ -105,6 +109,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         }
     }
 
+
     override fun bindFlow() {
         lifecycleOnRepeat {
             detailViewModel.dataFlow.collect {
@@ -122,10 +127,18 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         }
         lifecycleOnRepeat {
             detailViewModel.aiSummaryFlow.collect {
-                if (it.isNotEmpty()) {
+                if (it.first == State.Loading) {
+                    loadAiSummaryDialog = MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle("加载中...")        // 设置标题
+                        .setMessage("请稍候")         // 可选提示文字
+                        .setCancelable(false)      // 禁止点击外部取消
+                        .create()
+                    loadAiSummaryDialog?.show()
+                } else if (it.first == State.Complete) {
+                    loadAiSummaryDialog?.dismiss()
                     MaterialAlertDialogBuilder(requireActivity())
                         .setTitle("总结内容")
-                        .setMessage(it)
+                        .setMessage(it.second)
                         .setPositiveButton("收藏") { _, _ ->
                             // 确定按钮点击事件
                             detailViewModel.collection(memoId) {

@@ -139,11 +139,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             holder: ItemCardViewHolder,
             position: Int
         ) {
-            holder.bindData(data[position], {
+            holder.bindData(data[position]) {
                 itemClick.invoke(it)
-            }, {
-                aiClick.invoke(it)
-            })
+            }
         }
 
         override fun getItemCount(): Int {
@@ -153,7 +151,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     class ItemCardViewHolder(private val binding: ItemCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(memo: Memo, itemClick: (Memo) -> Unit, aiClick: (Memo) -> Unit) {
+        fun bindData(memo: Memo, itemClick: (Memo) -> Unit) {
             binding.contentTv.text = memo.content
             binding.timeTv.text = memo.createTime.formatMillisToDateTime()
             binding.aiTv.visibility = if (memo.aiSummary.isNotEmpty()) View.VISIBLE else View.GONE

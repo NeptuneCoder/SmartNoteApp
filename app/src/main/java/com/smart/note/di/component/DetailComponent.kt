@@ -1,11 +1,16 @@
 package com.smart.note.di.component
 
+import android.app.Activity
+import android.content.Context
+import com.smart.note.di.module.DetailModule
 import com.smart.note.di.module.EditModule
+import com.smart.note.di.scope.DetailScope
 import com.smart.note.di.scope.EditScope
 import com.smart.note.module.detail.DetailFragment
 import com.smart.note.module.detail.DetailViewModel
 import com.smart.note.module.edit.EditFragment
 import com.smart.note.module.edit.EditViewModel
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
@@ -16,12 +21,13 @@ import dagger.Subcomponent
  * 5. 在App中创建AppComponent的实例；
  *
  */
-@EditScope
-@Subcomponent()
+@DetailScope
+@Subcomponent(modules = [DetailModule::class])
 interface DetailComponent {
     @Subcomponent.Factory
     interface Factory {
         fun create(): DetailComponent
+
     }
 
     fun inject(detailFragment: DetailFragment)

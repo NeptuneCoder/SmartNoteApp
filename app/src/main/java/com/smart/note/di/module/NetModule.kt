@@ -1,6 +1,7 @@
 package com.smart.note.di.module
 
 import android.util.Log
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.smart.note.BuildConfig
 import com.smart.note.di.scope.NetScope
 import com.smart.note.net.ApiService
@@ -62,6 +63,7 @@ class NetModule {
             .client(okHttpClient)
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create()) // 使用 Gson 解析 JSON
+            .addCallAdapterFactory(CoroutineCallAdapterFactory()) // 添加适配器
             .build()
     }
 

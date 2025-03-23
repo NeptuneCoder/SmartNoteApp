@@ -4,10 +4,12 @@ import com.smart.note.model.ChatRequest
 import com.smart.note.model.ChatResponse
 import com.smart.note.model.Message
 import com.smart.note.net.ApiService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ChatRepository @Inject constructor(private val apiService: ApiService) {
-    suspend fun sendMessage(userMessage: String): ChatResponse {
+    suspend fun sendMessage(userMessage: String): Flow<ChatResponse> = flow {
         val request = ChatRequest(
             model = "deepseek-chat",
             messages = listOf(
@@ -16,12 +18,7 @@ class ChatRepository @Inject constructor(private val apiService: ApiService) {
             ),
             stream = false
         )
+        emit(apiService.chatCompletion(request = request))
 
-        return try {
-            apiService.chatCompletion(request = request)
-        } catch (e: Exception) {
-            // 处理网络异常
-            throw e
-        }
     }
 }

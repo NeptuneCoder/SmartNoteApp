@@ -23,6 +23,7 @@ import com.smart.note.data.Memo
 import com.smart.note.databinding.FragmentHomeBinding
 import com.smart.note.databinding.ItemCardViewBinding
 import com.smart.note.ext.formatMillisToDateTime
+import com.smart.note.ext.lifecycleOnRepeat
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -101,15 +102,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun bindFlow() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.dataFlow
-                    .collect {
-                        data.clear()
-                        data.addAll(it)
-                        adapter.notifyDataSetChanged()
-                    }
-            }
+        lifecycleOnRepeat {
+            homeViewModel.dataFlow
+                .collect {
+                    data.clear()
+                    data.addAll(it)
+                    adapter.notifyDataSetChanged()
+                }
         }
     }
 

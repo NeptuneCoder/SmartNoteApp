@@ -93,7 +93,7 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
     }
 
     override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
 }

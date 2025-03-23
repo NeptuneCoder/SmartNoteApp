@@ -140,6 +140,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
          return when (item.itemId) {
             R.id.action_settings -> {
                 // 处理搜索逻辑
+                findNavController().navigate(R.id.action_HomeFragment_to_SettingFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)

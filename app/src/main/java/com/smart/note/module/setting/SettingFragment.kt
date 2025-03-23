@@ -30,9 +30,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
     }
 
     override fun bindListener() {
-        binding.buttonSecond.setOnClickListener {
-//            findNavController().navigate(R.id.action_SettingFragment_to_HomeFragment)
-        }
+
     }
 
     override fun bindFlow() {

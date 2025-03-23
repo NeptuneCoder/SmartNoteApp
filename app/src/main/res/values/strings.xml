@@ -16,4 +16,5 @@
     <string name="detail_fragment_label">详情</string>
     <string name="action_delete">删除</string>
     <string name="delete_success">删除成功</string>
+    <string name="txt_ai">AI</string>
 </resources>

@@ -1,0 +1,17 @@
+<!-- res/drawable/ic_circle.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"> <!-- 形状设为椭圆，宽高相等时即为圆形 -->
+
+    <!-- 填充颜色 -->
+    <solid android:color="#FF5722" /> <!-- 修改颜色值 -->
+
+    <!-- 尺寸（可选，默认根据 View 的宽高） -->
+    <size
+        android:width="24dp"
+        android:height="24dp" />
+
+    <!-- 边框（可选） -->
+    <stroke
+        android:width="2dp"
+        android:color="#FFFFFF" />
+</shape>

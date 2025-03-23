@@ -42,7 +42,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
     }
 
     override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
-        return true
+        return super.onOptionsItemSelected(item)
     }
+
 
 }

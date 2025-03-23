@@ -41,6 +41,10 @@ class MainActivity : AppCompatActivity() {
         // 监听 Fragment 切换事件
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // 当 Fragment 切换时，强制刷新菜单
+            Log.i(
+                "addOnDestinationChangedListener",
+                "addOnDestinationChangedListener === $destination"
+            )
             invalidateOptionsMenu()
         }
     }
@@ -53,7 +57,10 @@ class MainActivity : AppCompatActivity() {
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
                 ?.childFragmentManager?.primaryNavigationFragment
-
+        Log.i(
+            "addOnDestinationChangedListener",
+            "currentFragment === $currentFragment"
+        )
         // 如果当前 Fragment 是 HomeFragment，不加载 Activity 的菜单，由 Fragment 自行处理
         if (currentFragment is ToolbarMenuHandler) {
             currentFragment.onCreateToolbarMenu(menu, menuInflater)

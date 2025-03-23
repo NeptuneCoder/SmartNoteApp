@@ -156,9 +156,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         fun bindData(memo: Memo, itemClick: (Memo) -> Unit, aiClick: (Memo) -> Unit) {
             binding.contentTv.text = memo.content
             binding.timeTv.text = memo.createTime.formatMillisToDateTime()
-            binding.aiTv.setOnClickListener {
-                aiClick.invoke(memo)
-            }
+            binding.aiTv.visibility = if (memo.aiSummary.isNotEmpty()) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
                 itemClick.invoke(memo)
             }
@@ -172,6 +170,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_ai_chat -> {
+                findNavController().navigate(R.id.action_HomeFragment_to_ChatFragment)
+                true
+            }
+
             R.id.action_settings -> {
                 findNavController().navigate(R.id.action_HomeFragment_to_SettingFragment)
                 true

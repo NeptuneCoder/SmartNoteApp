@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_HomeFragment_to_AboutFragment"
             app:destination="@id/AboutFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
     </fragment>
 
 
@@ -81,7 +84,7 @@
     <fragment
         android:id="@+id/ChatFragment"
         android:name="com.smart.note.module.chat.ChatFragment"
-        android:label="@string/detail_fragment_label"
+        android:label="@string/chat_fragment_label"
         tools:layout="@layout/fragment_chat">
 
         <argument

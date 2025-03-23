@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<T : ViewBinding> : Fragment() {
+abstract class BaseFragment<T : ViewBinding> : Fragment(), ToolbarMenuHandler {
 
     // 用于保存绑定对象，避免内存泄漏
     private var _binding: T? = null

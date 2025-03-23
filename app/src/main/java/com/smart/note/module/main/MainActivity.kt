@@ -10,9 +10,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import com.smart.basic.fragment.ToolbarMenuHandler
 import com.smart.note.App
 import com.smart.note.R
 import com.smart.note.databinding.ActivityMainBinding
+import com.smart.note.module.detail.DetailFragment
+import com.smart.note.module.edit.EditFragment
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -28,10 +32,34 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // 初始化 Navigation
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
+        navController = navHostFragment.navController
+
+        // 监听 Fragment 切换事件
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            // 当 Fragment 切换时，强制刷新菜单
+            invalidateOptionsMenu()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // 清空旧菜单（避免多个 Fragment 的菜单叠加）
+        menu.clear()
+
+        // 获取当前 Fragment
+        val currentFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
+                ?.childFragmentManager?.primaryNavigationFragment
+
+        // 如果当前 Fragment 是 HomeFragment，不加载 Activity 的菜单，由 Fragment 自行处理
+        if (currentFragment is ToolbarMenuHandler) {
+            currentFragment.onCreateToolbarMenu(menu, menuInflater)
+            return true
+        }
+        // 加载 Activity 的全局菜单（可选）
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -40,15 +68,37 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                navController.navigate(R.id.action_HomeFragment_to_SettingFragment)
-                true
+        val currentFragment = supportFragmentManager.primaryNavigationFragment
+        Log.i("onOptionsItemSelected", "onOptionsItemSelected === " + currentFragment)
+        if (currentFragment is ToolbarMenuHandler) {
+            Log.i("onOptionsItemSelected", "onOptionsItemSelected === " + currentFragment)
+            if (currentFragment.onToolbarMenuItemClick(item)) {
+                return true
             }
-
-            else -> super.onOptionsItemSelected(item)
         }
+        return super.onOptionsItemSelected(item)
     }
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//                val currentFragment = supportFragmentManager.primaryNavigationFragment
+//        Log.i("currentFragment","currentFragment === $currentFragment")
+//        menuInflater.inflate(R.menu.menu_main, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        return when (item.itemId) {
+//            R.id.action_settings -> {
+//                navController.navigate(R.id.action_HomeFragment_to_SettingFragment)
+//                true
+//            }
+//
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

@@ -4,6 +4,9 @@ import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -126,6 +129,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             binding.root.setOnClickListener {
                 itemClick.invoke(memo)
             }
+        }
+    }
+    override fun onCreateToolbarMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
+         return when (item.itemId) {
+            R.id.action_settings -> {
+                // 处理搜索逻辑
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

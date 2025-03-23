@@ -3,6 +3,9 @@ package com.smart.note.module.detail
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
@@ -38,9 +41,23 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
 
 
     override fun bindView(view: View, savedInstanceState: Bundle?) {
-
+        setHasOptionsMenu(true)
     }
 
+    override fun onCreateToolbarMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_detail, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_delete -> {
+                // 处理搜索逻辑
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun bindListener() {
         binding.fab.setOnClickListener {

@@ -3,6 +3,9 @@ package com.smart.note.module.setting
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
@@ -34,6 +37,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
 
     override fun bindFlow() {
         
+    }
+
+    override fun onCreateToolbarMenu(menu: Menu, inflater: MenuInflater) {
+
+    }
+
+    override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
+        return true
     }
 
 }

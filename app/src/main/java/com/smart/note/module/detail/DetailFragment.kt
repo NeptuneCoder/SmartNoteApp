@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smart.basic.fragment.BaseFragment
@@ -84,6 +85,18 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
             }
             findNavController()
                 .navigate(R.id.action_DetailFragment_to_EditFragment, bundle)
+        }
+        binding.nestedScrollView.setOnScrollChangeListener { v: NestedScrollView, _, scrollY, _, oldScrollY ->
+            // 判断是否滑动到底部
+            val isAtBottom = v.getChildAt(0)?.let { child ->
+                v.height + scrollY >= child.height
+            } == true
+
+            if (isAtBottom) {
+                binding.fab.hide()
+            } else {
+                binding.fab.show()
+            }
         }
     }
 

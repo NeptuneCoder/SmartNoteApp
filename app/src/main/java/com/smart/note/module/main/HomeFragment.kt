@@ -153,6 +153,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 true
             }
 
+            R.id.action_about -> {
+                findNavController().navigate(R.id.action_HomeFragment_to_AboutFragment)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

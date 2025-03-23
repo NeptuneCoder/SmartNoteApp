@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_HomeFragment_to_SettingFragment"
             app:destination="@id/SettingFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_AboutFragment"
+            app:destination="@id/AboutFragment" />
     </fragment>
 
 
@@ -59,6 +62,16 @@
         android:name="com.smart.note.module.setting.SettingFragment"
         android:label="@string/setting_fragment_label"
         tools:layout="@layout/fragment_setting">
+
+        <!--        <action-->
+        <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->
+        <!--            app:destination="@id/HomeFragment" />-->
+    </fragment>
+    <fragment
+        android:id="@+id/AboutFragment"
+        android:name="com.smart.note.module.about.AboutFragment"
+        android:label="@string/about_fragment_label"
+        tools:layout="@layout/fragment_about">
 
         <!--        <action-->
         <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->

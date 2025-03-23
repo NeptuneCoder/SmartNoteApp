@@ -5,6 +5,7 @@
     <string name="home_fragment_label">主页</string>
     <string name="edit_fragment_label">编辑</string>
     <string name="setting_fragment_label">设置</string>
+    <string name="about_fragment_label">关于</string>
     <string name="next">下一页</string>
     <string name="previous">上一页</string>
     <string name="save">保存</string>
@@ -17,4 +18,5 @@
     <string name="action_delete">删除</string>
     <string name="delete_success">删除成功</string>
     <string name="txt_ai">AI</string>
+    <string name="action_about">关于</string>
 </resources>

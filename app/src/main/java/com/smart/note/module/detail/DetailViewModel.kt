@@ -29,6 +29,9 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
     private val _dataFlow = MutableStateFlow<Memo?>(null)
     val dataFlow = _dataFlow.asStateFlow()
 
+    private val _aiSummaryFlow = MutableStateFlow<String>("")
+    val aiSummaryFlow = _aiSummaryFlow.asStateFlow()
+
     @Inject
     lateinit var chatRepository: ChatRepository
 
@@ -42,10 +45,7 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         Log.i("chatRepository", "chatRepository ==== $chatRepository")
-        viewModelScope.launch {
-            val  res = chatRepository.sendMessage("你好呀")
-            Log.i("chatRepository", "chatRepository res ==== $res")
-        }
+
     }
 
     fun requestData(id: Int) {
@@ -62,6 +62,45 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
             memoDao.deleteById(id)
             withContext(Dispatchers.Main) {
                 call.invoke(R.string.delete_success)
+            }
+        }
+    }
+
+    fun aiSummery(id: Int) {
+        viewModelScope.launch {
+            val data = memoDao.getMemoById(id)
+            if (data?.aiSummary?.isEmpty() == true) {
+                val res = chatRepository.sendMessage("帮我总结一下内容:${data.content}")
+                Log.i("chatRepository", "chatRepository res ==== $res")
+                if (res.choices.isNotEmpty()) {
+                    _aiSummaryFlow.value = res.choices[0].message.content
+                } else {
+                    _aiSummaryFlow.value = "没有内容"
+                }
+            } else {
+                _aiSummaryFlow.value = ""
+                _aiSummaryFlow.value = data?.aiSummary ?: "没有内容"
+            }
+
+
+        }
+
+    }
+
+    fun collection(id: Int, call: () -> Unit) {
+        val summary = _aiSummaryFlow.value
+        if (summary.isNotEmpty()) {
+            viewModelScope.launch {
+                val data = memoDao.getMemoById(id)
+                data?.aiSummary = summary
+                data?.updateTime = System.currentTimeMillis()
+                data?.let {
+                    memoDao.update(data)
+                }
+                withContext(Dispatchers.Main) {
+                    call.invoke()
+                    requestData(id)
+                }
             }
         }
     }

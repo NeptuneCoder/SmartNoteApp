@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -36,15 +37,19 @@ class NetModule {
         @Named("apiKey") apiKey: String,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
-        return OkHttpClient.Builder().addInterceptor { chain ->
-            val original = chain.request()
-            val request = original.newBuilder()
-                .header("Authorization", "Bearer $apiKey")
-                .header("Content-Type", "application/json")
-                .method(original.method, original.body)
-                .build()
-            chain.proceed(request)
-        }.addInterceptor(loggingInterceptor)
+        return OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // 连接超时
+            .readTimeout(60, TimeUnit.SECONDS)     // 读取超时（关键！）
+            .writeTimeout(30, TimeUnit.SECONDS)    // 写入超时
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val request = original.newBuilder()
+                    .header("Authorization", "Bearer $apiKey")
+                    .header("Content-Type", "application/json")
+                    .method(original.method, original.body)
+                    .build()
+                chain.proceed(request)
+            }.addInterceptor(loggingInterceptor)
             .build()
 
     }

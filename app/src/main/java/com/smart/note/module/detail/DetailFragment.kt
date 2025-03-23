@@ -73,6 +73,11 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
                 true
             }
 
+            R.id.action_ai -> {
+                detailViewModel.aiSummery(memoId)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -104,8 +109,36 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         lifecycleOnRepeat {
             detailViewModel.dataFlow.collect {
                 it?.let {
-                    binding.contentDetailTv.text = it.content
+                    binding.contentDetailTv.text = buildString {
+                        append(it.content)
+                        append("\n")
+                        if (it.aiSummary.isNotEmpty()) {
+                            append("deepSeek总结：\n")
+                            append(it.aiSummary)
+                        }
+                    }
                 }
+            }
+        }
+        lifecycleOnRepeat {
+            detailViewModel.aiSummaryFlow.collect {
+                if (it.isNotEmpty()) {
+                    MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle("总结内容")
+                        .setMessage(it)
+                        .setPositiveButton("收藏") { _, _ ->
+                            // 确定按钮点击事件
+                            detailViewModel.collection(memoId) {
+                                Toast.makeText(
+                                    this@DetailFragment.context, R.string.collection_success,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                        .setNegativeButton("取消", null)
+                        .show()
+                }
+
             }
         }
     }

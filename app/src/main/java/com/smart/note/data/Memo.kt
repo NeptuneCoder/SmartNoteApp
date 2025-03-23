@@ -11,6 +11,8 @@ data class Memo(
     val id: Int = 0,
     @ColumnInfo("content")
     var content: String,
+    @ColumnInfo("ai_summary", defaultValue = "")
+    var aiSummary: String = "",
     @ColumnInfo("md5")
     var md5: String,
     @ColumnInfo("msg_type")

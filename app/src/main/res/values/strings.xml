@@ -19,4 +19,6 @@
     <string name="delete_success">删除成功</string>
     <string name="txt_ai">AI</string>
     <string name="action_about">关于</string>
+    <string name="action_ai">DeepSeek总结</string>
+    <string name="collection_success">收藏成功</string>
 </resources>

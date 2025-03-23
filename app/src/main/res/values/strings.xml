@@ -9,4 +9,7 @@
     <string name="previous">上一页</string>
     <string name="save">保存</string>
     <string name="please_input_note">请输入便签内容</string>
+    <string name="content_is_empty">请输入内容</string>
+    <string name="content_saved">内容已保存</string>
+    <string name="save_success">保存成功</string>
 </resources>

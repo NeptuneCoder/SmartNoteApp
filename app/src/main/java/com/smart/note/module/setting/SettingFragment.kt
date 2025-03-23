@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.smart.basic.BaseFragment
+import com.smart.basic.fragment.BaseFragment
 import com.smart.note.R
 
 import com.smart.note.databinding.FragmentSettingBinding
@@ -22,14 +22,18 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         return FragmentSettingBinding.inflate(inflater, container, false)
     }
 
+    override fun bindView(view: View, savedInstanceState: Bundle?) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    }
 
+    override fun bindListener() {
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SettingFragment_to_HomeFragment)
         }
     }
 
+    override fun bindFlow() {
+        
+    }
 
 }

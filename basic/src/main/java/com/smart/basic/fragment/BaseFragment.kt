@@ -1,4 +1,4 @@
-package com.smart.basic
+package com.smart.basic.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,6 +28,21 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
         inject()
         _binding = initBinding(inflater, container)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindView(view, savedInstanceState)
+        bindListener()
+        bindFlow()
+        initData(view, savedInstanceState)
+    }
+
+    protected abstract fun bindView(view: View, savedInstanceState: Bundle?)
+    protected abstract fun bindListener()
+    protected abstract fun bindFlow()
+    protected open fun initData(view: View, savedInstanceState: Bundle?) {
+
     }
 
     override fun onDestroyView() {

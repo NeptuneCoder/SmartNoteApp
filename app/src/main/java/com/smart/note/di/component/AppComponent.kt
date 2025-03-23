@@ -18,4 +18,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun editComponent(): EditComponent.Factory
     fun mainComponent(): MainComponent.Factory
+    fun homeComponent(): HomeComponent.Factory
 }

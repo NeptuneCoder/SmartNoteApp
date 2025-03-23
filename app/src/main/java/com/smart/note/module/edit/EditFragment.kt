@@ -1,22 +1,21 @@
 package com.smart.note.module.edit
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.smart.basic.BaseFragment
+import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
-import com.smart.note.data.Memo
 import com.smart.note.databinding.FragmentEditBinding
-import com.smart.note.ext.md5
-import com.smart.note.net.ApiService
-import com.smart.note.room.MemoDao
+
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -31,28 +30,40 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
             .editComponent()
             .create()
             .inject(this)
+        lifecycle.addObserver(editViewModel)
     }
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentEditBinding {
         return FragmentEditBinding.inflate(inflater, container, false)
     }
 
-    @Inject
-    lateinit var apiService: ApiService
+    override fun bindView(view: View, savedInstanceState: Bundle?) {
 
-    @Inject
-    lateinit var memoDao: MemoDao
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.i("apiService", "apiService === $apiService")
-        Log.i("apiService", "memoDao === $memoDao")
-        Log.i("apiService", "editViewModel === $editViewModel")
+    }
 
+    override fun bindListener() {
         binding.saveButton.setOnClickListener {
+            val res = binding.contentEt.text
+            if (res.isEmpty()) {
+                Toast.makeText(this.context, R.string.content_is_empty, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             lifecycleScope.launch {
-                memoDao.insert(Memo(content = "测试内容", md5 = "测试内容".md5()))
+                editViewModel.save(content = res.toString(), {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@EditFragment.context, it, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                }, {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@EditFragment.context, it, Toast.LENGTH_SHORT).show()
+                    }
+                })
             }
         }
+    }
+
+    override fun bindFlow() {
     }
 
 

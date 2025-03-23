@@ -3,6 +3,7 @@ package com.smart.note.di.component
 import com.smart.note.di.module.EditModule
 import com.smart.note.di.scope.EditScope
 import com.smart.note.module.edit.EditFragment
+import com.smart.note.module.edit.EditViewModel
 import dagger.Subcomponent
 
 /**
@@ -22,5 +23,6 @@ interface EditComponent {
     }
 
     fun inject(editFragment: EditFragment)
+    fun inject(editViewModel: EditViewModel)
 
 }

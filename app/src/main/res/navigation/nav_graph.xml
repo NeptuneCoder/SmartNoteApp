@@ -53,9 +53,9 @@
         <action
             android:id="@+id/action_DetailFragment_to_EditFragment"
             app:destination="@id/EditFragment" />
-        <!--        <action-->
-        <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->
-        <!--            app:destination="@id/HomeFragment" />-->
+        <action
+            android:id="@+id/action_DetailFragment_to_ChatFragment"
+            app:destination="@id/ChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/SettingFragment"
@@ -72,6 +72,22 @@
         android:name="com.smart.note.module.about.AboutFragment"
         android:label="@string/about_fragment_label"
         tools:layout="@layout/fragment_about">
+
+        <!--        <action-->
+        <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->
+        <!--            app:destination="@id/HomeFragment" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/ChatFragment"
+        android:name="com.smart.note.module.chat.ChatFragment"
+        android:label="@string/detail_fragment_label"
+        tools:layout="@layout/fragment_chat">
+
+        <argument
+            android:name="id"
+            android:defaultValue="-1"
+            app:argType="integer" />
 
         <!--        <action-->
         <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->

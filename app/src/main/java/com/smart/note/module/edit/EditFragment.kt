@@ -43,7 +43,7 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
     }
 
     override fun bindView(view: View, savedInstanceState: Bundle?) {
-
+        setHasOptionsMenu(true)
     }
 
     override fun bindListener() {

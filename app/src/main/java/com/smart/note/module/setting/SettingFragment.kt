@@ -26,7 +26,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
     }
 
     override fun bindView(view: View, savedInstanceState: Bundle?) {
-
+        setHasOptionsMenu(true)
     }
 
     override fun bindListener() {
@@ -34,7 +34,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
     }
 
     override fun bindFlow() {
-        
+
     }
 
     override fun onCreateToolbarMenu(menu: Menu, inflater: MenuInflater) {

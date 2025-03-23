@@ -35,15 +35,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     lateinit var homeViewModel: HomeViewModel
     private val data = mutableListOf<Memo>()
     private val adapter by lazy {
-        ItemCardAdapter(data) { res ->
+        ItemCardAdapter(data, { res ->
             //TODO 带着参数跳转到下一个界面
             val bundle = Bundle().apply {
                 putInt("memo_id", res.id)
             }
             findNavController()
                 .navigate(R.id.action_HomeFragment_to_DetailFragment, bundle)
-        }
+        }, {
+
+        })
     }
+
 
     override fun inject() {
         super.inject()
@@ -92,7 +95,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     class ItemCardAdapter(
         private val data: MutableList<Memo>,
-        private val itemClick: (Memo) -> Unit
+        private val itemClick: (Memo) -> Unit,
+        private val aiClick: (Memo) -> Unit
     ) : RecyclerView.Adapter<ItemCardViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -111,9 +115,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             holder: ItemCardViewHolder,
             position: Int
         ) {
-            holder.bindData(data[position]) {
+            holder.bindData(data[position], {
                 itemClick.invoke(it)
-            }
+            }, {
+                aiClick.invoke(it)
+            })
         }
 
         override fun getItemCount(): Int {
@@ -123,26 +129,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     class ItemCardViewHolder(private val binding: ItemCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(memo: Memo, itemClick: (Memo) -> Unit) {
+        fun bindData(memo: Memo, itemClick: (Memo) -> Unit, aiClick: (Memo) -> Unit) {
             binding.contentTv.text = memo.content
             binding.timeTv.text = memo.createTime.formatMillisToDateTime()
+            binding.aiTv.setOnClickListener {
+                aiClick.invoke(memo)
+            }
             binding.root.setOnClickListener {
                 itemClick.invoke(memo)
             }
         }
     }
+
     override fun onCreateToolbarMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
-         return when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_settings -> {
-                // 处理搜索逻辑
                 findNavController().navigate(R.id.action_HomeFragment_to_SettingFragment)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

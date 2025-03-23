@@ -3,7 +3,7 @@
     android:shape="oval"> <!-- 形状设为椭圆，宽高相等时即为圆形 -->
 
     <!-- 填充颜色 -->
-    <solid android:color="#FF5722" /> <!-- 修改颜色值 -->
+    <solid android:color="#ff9800" /> <!-- 修改颜色值 -->
 
     <!-- 尺寸（可选，默认根据 View 的宽高） -->
     <size
@@ -12,6 +12,6 @@
 
     <!-- 边框（可选） -->
     <stroke
-        android:width="2dp"
+        android:width="1px"
         android:color="#FFFFFF" />
 </shape>

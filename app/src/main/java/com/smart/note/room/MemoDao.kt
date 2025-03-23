@@ -20,6 +20,9 @@ interface MemoDao {
     @Delete
     suspend fun delete(memo: Memo)
 
+    @Query("DELETE FROM tab_memo WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
     @Query("SELECT * FROM tab_memo ORDER BY create_time DESC")
     fun getAllMemos(): Flow<MutableList<Memo>> // 使用 Flow 实现实时数据监听
 

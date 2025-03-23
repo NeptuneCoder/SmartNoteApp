@@ -10,9 +10,12 @@ import com.smart.note.data.Memo
 import com.smart.note.ext.md5
 import com.smart.note.net.ApiService
 import com.smart.note.room.MemoDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app),
@@ -36,6 +39,16 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
             val res = memoDao.getMemoById(id)
             res?.let {
                 _dataFlow.value = res
+            }
+        }
+    }
+
+    fun delete(id: Int, call: (Int) -> Unit) {
+
+        viewModelScope.launch {
+            memoDao.deleteById(id)
+            withContext(Dispatchers.Main) {
+                call.invoke(R.string.delete_success)
             }
         }
     }

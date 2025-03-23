@@ -1,6 +1,7 @@
 package com.smart.note.module.detail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,7 +9,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
@@ -50,11 +54,25 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     }
 
     override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
+        Log.i("onToolbarMenuItemClick", "onToolbarMenuItemClick === $item")
         return when (item.itemId) {
             R.id.action_delete -> {
                 // 处理搜索逻辑
+                MaterialAlertDialogBuilder(requireActivity())
+                    .setTitle("删除")
+                    .setMessage("确定要执行删除操作吗？")
+                    .setPositiveButton("删除") { _, _ ->
+                        // 确定按钮点击事件
+                        detailViewModel.delete(memoId) {
+                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        }
+                    }
+                    .setNegativeButton("取消", null)
+                    .show()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -86,5 +104,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         detailViewModel.requestData(memoId)
     }
 }
+
 
 

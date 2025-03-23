@@ -65,10 +65,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        val currentFragment = supportFragmentManager.primaryNavigationFragment
+        val currentFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)
+                ?.childFragmentManager?.primaryNavigationFragment
         if (currentFragment is ToolbarMenuHandler) {
             if (currentFragment.onToolbarMenuItemClick(item)) {
                 return true

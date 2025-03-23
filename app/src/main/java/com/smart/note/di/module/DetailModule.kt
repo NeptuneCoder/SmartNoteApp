@@ -1,6 +1,5 @@
 package com.smart.note.di.module
 
-import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -12,7 +11,11 @@ import dagger.Provides
 class DetailModule() {
     @DetailScope
     @Provides
-    fun provideContext(context: Context): Context {
-        return context
+    fun provideAlertDialog(context: Context): AlertDialog {
+        return MaterialAlertDialogBuilder(context)
+            .setTitle("加载中...")        // 设置标题
+            .setMessage("请稍候")         // 可选提示文字
+            .setCancelable(false)      // 禁止点击外部取消
+            .create()
     }
 }

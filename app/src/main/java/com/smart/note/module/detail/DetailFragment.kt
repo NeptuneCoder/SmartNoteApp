@@ -1,5 +1,6 @@
 package com.smart.note.module.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -30,13 +31,15 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     @Inject
     lateinit var detailViewModel: DetailViewModel
 
+    @Inject
+    lateinit var loadAiSummaryDialog: AlertDialog
 
-    var loadAiSummaryDialog: AlertDialog? = null
+
     override fun inject() {
         super.inject()
         App.appComponent
             .detailComponent()
-            .create()
+            .create(requireActivity())
             .inject(this)
     }
 
@@ -58,7 +61,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     }
 
     override fun onToolbarMenuItemClick(item: MenuItem): Boolean {
-        Log.i("onToolbarMenuItemClick", "onToolbarMenuItemClick === $item")
+
         return when (item.itemId) {
             R.id.action_delete -> {
                 // 处理搜索逻辑
@@ -87,6 +90,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     }
 
     override fun bindListener() {
+        Log.i("bindListener", "context === $context")
         binding.fab.setOnClickListener {
             //TODO 带着参数跳转到下一个界面
             val bundle = Bundle().apply {
@@ -128,14 +132,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         lifecycleOnRepeat {
             detailViewModel.aiSummaryFlow.collect {
                 if (it.first == State.Loading) {
-                    loadAiSummaryDialog = MaterialAlertDialogBuilder(requireActivity())
-                        .setTitle("加载中...")        // 设置标题
-                        .setMessage("请稍候")         // 可选提示文字
-                        .setCancelable(false)      // 禁止点击外部取消
-                        .create()
-                    loadAiSummaryDialog?.show()
+                    loadAiSummaryDialog.show()
                 } else if (it.first == State.Complete) {
-                    loadAiSummaryDialog?.dismiss()
+                    loadAiSummaryDialog.dismiss()
                     MaterialAlertDialogBuilder(requireActivity())
                         .setTitle("总结内容")
                         .setMessage(it.second)
@@ -150,6 +149,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
                         }
                         .setNegativeButton("取消", null)
                         .show()
+                } else if (it.first == State.Error) {
+                    loadAiSummaryDialog.dismiss()
+                    Toast.makeText(requireActivity(), "加载失败", Toast.LENGTH_SHORT).show()
                 }
 
             }

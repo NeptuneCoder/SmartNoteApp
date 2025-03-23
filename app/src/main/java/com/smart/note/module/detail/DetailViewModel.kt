@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Dispatcher
 import javax.inject.Inject
 
-class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app),
+class DetailViewModel @Inject constructor(private val app: Application) : BaseViewModel(app),
     DefaultLifecycleObserver {
     @Inject
     lateinit var memoDao: MemoDao
@@ -42,7 +42,7 @@ class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app)
     init {
         App.appComponent
             .detailComponent()
-            .create()
+            .create(app)
             .inject(this)
     }
 

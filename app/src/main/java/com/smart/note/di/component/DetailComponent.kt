@@ -26,8 +26,7 @@ import dagger.Subcomponent
 interface DetailComponent {
     @Subcomponent.Factory
     interface Factory {
-        fun create(): DetailComponent
-
+        fun create(@BindsInstance context: Context): DetailComponent
     }
 
     fun inject(detailFragment: DetailFragment)

@@ -7,8 +7,8 @@
     android:layout_marginLeft="16dp"
     android:layout_marginTop="10dp"
     android:layout_marginRight="16dp"
-    app:cardCornerRadius="3dp"
     android:background="@color/white"
+    app:cardCornerRadius="3dp"
     tools:context=".module.main.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,11 +22,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="16dp"
+            android:ellipsize="end"
+            android:maxLines="6"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_sp_16"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="文本的内容" />
 
         <TextView
             android:id="@+id/time_tv"

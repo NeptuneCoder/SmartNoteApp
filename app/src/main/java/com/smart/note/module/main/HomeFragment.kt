@@ -35,10 +35,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         ItemCardAdapter(data) { res ->
             //TODO 带着参数跳转到下一个界面
             val bundle = Bundle().apply {
-                putString("md5", res.md5)
+                putInt("memo_id", res.id)
             }
             findNavController()
-                .navigate(R.id.action_HomeFragment_to_EditFragment, bundle)
+                .navigate(R.id.action_HomeFragment_to_DetailFragment, bundle)
         }
     }
 
@@ -103,6 +103,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 )
             )
         }
+
         override fun onBindViewHolder(
             holder: ItemCardViewHolder,
             position: Int

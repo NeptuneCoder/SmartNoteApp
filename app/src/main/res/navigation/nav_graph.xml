@@ -11,17 +11,21 @@
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
         <argument
-            android:name="md5"
-            android:defaultValue=""
-            app:argType="string" />
+            android:name="id"
+            android:defaultValue="-1"
+            app:argType="integer" />
         <action
             android:id="@+id/action_HomeFragment_to_EditFragment"
             app:destination="@id/EditFragment" />
         <action
+            android:id="@+id/action_HomeFragment_to_DetailFragment"
+            app:destination="@id/DetailFragment" />
+        <action
             android:id="@+id/action_HomeFragment_to_SettingFragment"
             app:destination="@id/SettingFragment" />
-
     </fragment>
+
+
     <fragment
         android:id="@+id/EditFragment"
         android:name="com.smart.note.module.edit.EditFragment"
@@ -33,13 +37,31 @@
             app:destination="@id/HomeFragment" />
     </fragment>
     <fragment
+        android:id="@+id/DetailFragment"
+        android:name="com.smart.note.module.detail.DetailFragment"
+        android:label="@string/detail_fragment_label"
+        tools:layout="@layout/fragment_detail">
+
+        <argument
+            android:name="id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_DetailFragment_to_EditFragment"
+            app:destination="@id/EditFragment" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->
+        <!--            app:destination="@id/HomeFragment" />-->
+    </fragment>
+    <fragment
         android:id="@+id/SettingFragment"
         android:name="com.smart.note.module.setting.SettingFragment"
         android:label="@string/setting_fragment_label"
         tools:layout="@layout/fragment_setting">
 
-        <action
-            android:id="@+id/action_SettingFragment_to_HomeFragment"
-            app:destination="@id/HomeFragment" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_SettingFragment_to_HomeFragment"-->
+        <!--            app:destination="@id/HomeFragment" />-->
     </fragment>
 </navigation>

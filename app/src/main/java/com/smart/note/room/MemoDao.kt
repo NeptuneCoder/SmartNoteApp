@@ -23,6 +23,6 @@ interface MemoDao {
     @Query("SELECT * FROM tab_memo ORDER BY create_time DESC")
     fun getAllMemos(): Flow<MutableList<Memo>> // 使用 Flow 实现实时数据监听
 
-    @Query("SELECT * FROM tab_memo WHERE md5 = :md5")
-    suspend fun getMemoById(md5: String): Memo?
+    @Query("SELECT * FROM tab_memo WHERE id = :id")
+    suspend fun getMemoById(id: Int): Memo?
 }

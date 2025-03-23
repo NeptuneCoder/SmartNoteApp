@@ -1,4 +1,4 @@
-package com.smart.note.module.edit
+package com.smart.note.module.detail
 
 import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -15,11 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class EditViewModel @Inject constructor(app: Application) : BaseViewModel(app),
+class DetailViewModel @Inject constructor(app: Application) : BaseViewModel(app),
     DefaultLifecycleObserver {
-    @Inject
-    lateinit var apiService: ApiService
-
     @Inject
     lateinit var memoDao: MemoDao
 
@@ -28,33 +25,11 @@ class EditViewModel @Inject constructor(app: Application) : BaseViewModel(app),
 
     init {
         App.appComponent
-            .editComponent()
+            .detailComponent()
             .create()
             .inject(this)
-
     }
 
-    fun save(
-        content: String,
-        successCall: suspend (Int) -> Unit,
-        errorCall: suspend (Int) -> Unit
-    ) {
-        viewModelScope.launch {
-            if (_dataFlow.value == null) {
-                memoDao.insert(Memo(content = content, md5 = content.md5()))
-                successCall.invoke(R.string.save_success)
-            } else {
-                val memo = _dataFlow.value
-                memo?.let {
-                    it.content = content
-                    it.md5 = content.md5()
-                    it.updateTime = System.currentTimeMillis()
-                    memoDao.update(it)
-                    successCall.invoke(R.string.update_success)
-                }
-            }
-        }
-    }
 
     fun requestData(id: Int) {
         viewModelScope.launch {
@@ -62,8 +37,6 @@ class EditViewModel @Inject constructor(app: Application) : BaseViewModel(app),
             res?.let {
                 _dataFlow.value = res
             }
-
         }
-
     }
 }

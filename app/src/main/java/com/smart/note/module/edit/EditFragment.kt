@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
@@ -47,13 +45,13 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
 
     override fun bindListener() {
         binding.saveButton.setOnClickListener {
-            val res = binding.contentEt.text
+            val res = binding.contentEt.text.toString()
             if (res.isEmpty()) {
                 Toast.makeText(this.context, R.string.content_is_empty, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             lifecycleScope.launch {
-                editViewModel.save( content = res.toString(), {
+                editViewModel.save(content = res.toString(), {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@EditFragment.context, it, Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
@@ -78,11 +76,12 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
         }
     }
 
-    val md5: String by lazy { arguments?.getString("md5") ?: "" }
+    private val memoId by lazy { arguments?.getInt("memo_id") ?: -1 }
     override fun initData(view: View, savedInstanceState: Bundle?) {
         super.initData(view, savedInstanceState)
-        if (md5.isNotEmpty()) {
-            editViewModel.requestData(md5)
+        Log.i("memoId", "memoId === $memoId")
+        if (memoId != -1) {
+            editViewModel.requestData(memoId)
         }
     }
 

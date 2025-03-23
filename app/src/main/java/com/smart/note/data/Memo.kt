@@ -7,7 +7,8 @@ import java.io.Serializable
 
 @Entity(tableName = "tab_memo")
 data class Memo(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     @ColumnInfo("content")
     var content: String,
     @ColumnInfo("md5")
@@ -19,5 +20,4 @@ data class Memo(
     @ColumnInfo("update_time")
     var updateTime: Long = System.currentTimeMillis(),
 
-    ) :
-    Serializable
+    ) : Serializable

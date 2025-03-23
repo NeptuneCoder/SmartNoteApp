@@ -19,4 +19,5 @@ interface AppComponent {
     fun editComponent(): EditComponent.Factory
     fun mainComponent(): MainComponent.Factory
     fun homeComponent(): HomeComponent.Factory
+    fun detailComponent(): DetailComponent.Factory
 }

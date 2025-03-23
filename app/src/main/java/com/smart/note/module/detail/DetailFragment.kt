@@ -113,7 +113,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     private val memoId by lazy { arguments?.getInt("memo_id") ?: -1 }
     override fun initData(view: View, savedInstanceState: Bundle?) {
         super.initData(view, savedInstanceState)
+        lifecycle.addObserver(detailViewModel)
         detailViewModel.requestData(memoId)
+
     }
 }
 

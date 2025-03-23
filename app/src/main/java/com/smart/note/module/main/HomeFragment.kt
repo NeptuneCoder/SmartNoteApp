@@ -73,6 +73,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.fab.setOnClickListener { view ->
             findNavController().navigate(R.id.action_HomeFragment_to_EditFragment)
         }
+        binding.recycleView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // 判断是否滑动到底部
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+
+                if (lastVisibleItemPosition == totalItemCount - 1) {
+                    // 滑动到底部时隐藏 FAB（带动画）
+                    binding.fab.hide()
+                } else {
+                    // 非底部时显示 FAB（带动画）
+                    binding.fab.show()
+                }
+            }
+        })
     }
 
     override fun bindFlow() {

@@ -102,7 +102,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson) // Gson 解析 JSON
     implementation(libs.logging.interceptor) // 可选，日志拦截器
-
+    implementation(libs.xx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

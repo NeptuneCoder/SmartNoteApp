@@ -16,6 +16,7 @@ interface MemoDao {
     @Update
     suspend fun update(memo: Memo)
 
+
     @Delete
     suspend fun delete(memo: Memo)
 

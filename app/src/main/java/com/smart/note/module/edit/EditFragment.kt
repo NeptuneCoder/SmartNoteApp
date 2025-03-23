@@ -1,17 +1,21 @@
 package com.smart.note.module.edit
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
 import com.smart.note.databinding.FragmentEditBinding
+import com.smart.note.ext.lifecycleOnRepeat
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,7 +53,7 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
                 return@setOnClickListener
             }
             lifecycleScope.launch {
-                editViewModel.save(content = res.toString(), {
+                editViewModel.save( content = res.toString(), {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@EditFragment.context, it, Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
@@ -64,7 +68,22 @@ class EditFragment : BaseFragment<FragmentEditBinding>() {
     }
 
     override fun bindFlow() {
+        lifecycleOnRepeat {
+            editViewModel.dataFlow
+                .collect {
+                    it?.let {
+                        binding.contentEt.setText(it.content)
+                    }
+                }
+        }
     }
 
+    val md5: String by lazy { arguments?.getString("md5") ?: "" }
+    override fun initData(view: View, savedInstanceState: Bundle?) {
+        super.initData(view, savedInstanceState)
+        if (md5.isNotEmpty()) {
+            editViewModel.requestData(md5)
+        }
+    }
 
 }

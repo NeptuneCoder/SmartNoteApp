@@ -10,7 +10,10 @@
         android:name="com.smart.note.module.main.HomeFragment"
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
-
+        <argument
+            android:name="md5"
+            android:defaultValue=""
+            app:argType="string" />
         <action
             android:id="@+id/action_HomeFragment_to_EditFragment"
             app:destination="@id/EditFragment" />

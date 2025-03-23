@@ -9,15 +9,15 @@ import java.io.Serializable
 data class Memo(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo("content")
-    val content: String,
+    var content: String,
     @ColumnInfo("md5")
-    val md5: String,
+    var md5: String,
     @ColumnInfo("msg_type")
     val msgType: Int = 0,
     @ColumnInfo("create_time")
     val createTime: Long = System.currentTimeMillis(),
     @ColumnInfo("update_time")
-    val updateTime: Long = System.currentTimeMillis(),
+    var updateTime: Long = System.currentTimeMillis(),
 
     ) :
     Serializable

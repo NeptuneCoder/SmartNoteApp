@@ -28,11 +28,20 @@ import javax.inject.Inject
  */
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-
     @Inject
     lateinit var homeViewModel: HomeViewModel
     private val data = mutableListOf<Memo>()
-    private val adapter by lazy { ItemCardAdapter(data) }
+    private val adapter by lazy {
+        ItemCardAdapter(data) { res ->
+            //TODO 带着参数跳转到下一个界面
+            val bundle = Bundle().apply {
+                putString("md5", res.md5)
+            }
+            findNavController()
+                .navigate(R.id.action_HomeFragment_to_EditFragment, bundle)
+        }
+    }
+
     override fun inject() {
         super.inject()
         App.appComponent
@@ -78,8 +87,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         homeViewModel.requestData()
     }
 
-    class ItemCardAdapter(private val data: MutableList<Memo>) :
-        RecyclerView.Adapter<ItemCardViewHolder>() {
+    class ItemCardAdapter(
+        private val data: MutableList<Memo>,
+        private val itemClick: (Memo) -> Unit
+    ) : RecyclerView.Adapter<ItemCardViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -92,29 +103,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 )
             )
         }
-
         override fun onBindViewHolder(
             holder: ItemCardViewHolder,
             position: Int
         ) {
-            holder.bindData(data[position])
+            holder.bindData(data[position]) {
+                itemClick.invoke(it)
+            }
         }
 
         override fun getItemCount(): Int {
             return data.size
         }
-
     }
 
     class ItemCardViewHolder(private val binding: ItemCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(memo: Memo) {
+        fun bindData(memo: Memo, itemClick: (Memo) -> Unit) {
             binding.contentTv.text = memo.content
-            binding.timeTv.text = formatMillisToDateTime(memo.createTime)
+            binding.timeTv.text = memo.createTime.formatMillisToDateTime()
+            binding.root.setOnClickListener {
+                itemClick.invoke(memo)
+            }
         }
-
     }
-
 }
 
 

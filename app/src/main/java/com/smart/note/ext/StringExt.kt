@@ -17,12 +17,3 @@ fun String.md5(): String {
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun formatMillisToDateTime(millis: Long): String {
-    val instant = Instant.ofEpochMilli(millis)
-    val zoneId = ZoneId.systemDefault() // 你的时区，可以改成 ZoneId.of("Asia/Shanghai")
-    val dateTime = instant.atZone(zoneId)
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-
-    return dateTime.format(formatter)
-}

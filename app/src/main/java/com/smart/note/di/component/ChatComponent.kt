@@ -1,6 +1,9 @@
 package com.smart.note.di.component
 
+import android.content.Context
+import com.smart.note.di.module.ChatModule
 import com.smart.note.di.module.EditModule
+import com.smart.note.di.scope.ChatScope
 import com.smart.note.di.scope.EditScope
 import com.smart.note.module.chat.ChatFragment
 import com.smart.note.module.chat.ChatViewModel
@@ -8,6 +11,7 @@ import com.smart.note.module.detail.DetailFragment
 import com.smart.note.module.detail.DetailViewModel
 import com.smart.note.module.edit.EditFragment
 import com.smart.note.module.edit.EditViewModel
+import dagger.BindsInstance
 import dagger.Subcomponent
 
 /**
@@ -18,12 +22,12 @@ import dagger.Subcomponent
  * 5. 在App中创建AppComponent的实例；
  *
  */
-@EditScope
-@Subcomponent()
+@ChatScope
+@Subcomponent(modules = [ChatModule::class])
 interface ChatComponent {
     @Subcomponent.Factory
     interface Factory {
-        fun create(): ChatComponent
+        fun create(@BindsInstance context: Context): ChatComponent
     }
 
     fun inject(chatFragment: ChatFragment)

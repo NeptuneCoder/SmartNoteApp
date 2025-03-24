@@ -23,4 +23,7 @@
     <string name="action_ai">DeepSeek总结</string>
     <string name="action_ai_chat">DeepSeekChat</string>
     <string name="collection_success">收藏成功</string>
+    <string name="hint_input_conent">请输入内容</string>
+    <string name="hint_input_content">请输入内容</string>
+    <string name="btn_send_content">发送</string>
 </resources>

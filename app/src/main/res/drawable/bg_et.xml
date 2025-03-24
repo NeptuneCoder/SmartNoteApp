@@ -1,0 +1,18 @@
+<!-- res/drawable/ic_circle.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"> <!-- 形状设为椭圆，宽高相等时即为圆形 -->
+
+    <!-- 填充颜色 -->
+    <solid android:color="#ffffff" /> <!-- 修改颜色值 -->
+    <corners
+        android:bottomLeftRadius="2dp"
+        android:bottomRightRadius="2dp"
+        android:topLeftRadius="2dp"
+        android:topRightRadius="2dp" />
+
+
+    <!-- 边框（可选） -->
+    <stroke
+        android:width="1px"
+        android:color="#999999" />
+</shape>

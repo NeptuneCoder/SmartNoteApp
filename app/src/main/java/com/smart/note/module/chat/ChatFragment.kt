@@ -1,6 +1,8 @@
 package com.smart.note.module.chat
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,16 +12,25 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
+import com.smart.note.data.NetState
 import com.smart.note.databinding.FragmentChatBinding
 import com.smart.note.databinding.FragmentDetailBinding
+import com.smart.note.databinding.ItemCardViewBinding
+import com.smart.note.databinding.ItemChatViewBinding
+import com.smart.note.ext.formatMillisToDateTime
 import com.smart.note.ext.lifecycleOnRepeat
+import com.smart.note.model.ChatContent
 import com.smart.note.module.detail.DetailViewModel
+import com.smart.note.module.main.HomeFragment.ItemCardViewHolder
 import javax.inject.Inject
 
 
@@ -29,12 +40,18 @@ import javax.inject.Inject
 class ChatFragment : BaseFragment<FragmentChatBinding>() {
 
     @Inject
-    lateinit var detailViewModel: DetailViewModel
+    lateinit var chatViewModel: ChatViewModel
+
+    @Inject
+    lateinit var loadAiSummaryDialog: AlertDialog
+
+    private val data = mutableListOf<ChatContent>()
+    private val adapter by lazy { ChatAdapter(data) }
     override fun inject() {
         super.inject()
         App.appComponent
             .chatComponent()
-            .create()
+            .create(requireActivity())
             .inject(this)
     }
 
@@ -48,6 +65,48 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
 
     override fun bindView(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
+        binding.recycleView.layoutManager = LinearLayoutManager(requireActivity()).apply {
+            orientation = LinearLayoutManager.VERTICAL
+        }
+        binding.recycleView.adapter = adapter
+    }
+
+    private class ChatAdapter(val data: MutableList<ChatContent>) :
+        RecyclerView.Adapter<ChatViewHolder>() {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): ChatViewHolder {
+            return ChatViewHolder(
+                ItemChatViewBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        }
+
+        override fun onBindViewHolder(
+            holder: ChatViewHolder,
+            position: Int
+        ) {
+            holder.bindData(data[position])
+        }
+
+        override fun getItemCount(): Int {
+            return data.size
+        }
+
+    }
+
+    class ChatViewHolder(private val binding: ItemChatViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bindData(data: ChatContent) {
+            binding.contentTv.text = data.content
+            binding.timeTv.text = data.createTime.formatMillisToDateTime()
+            binding.aiTv.text = if (data.type == 0) "Sf" else "AI"
+        }
+
     }
 
     override fun onCreateToolbarMenu(menu: Menu, inflater: MenuInflater) {
@@ -59,24 +118,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         Log.i("onToolbarMenuItemClick", "onToolbarMenuItemClick === $item")
         return when (item.itemId) {
             R.id.action_delete -> {
-                // 处理搜索逻辑
-                MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle("删除")
-                    .setMessage("确定要执行删除操作吗？")
-                    .setPositiveButton("删除") { _, _ ->
-                        // 确定按钮点击事件
-                        detailViewModel.delete(memoId) {
-                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                            findNavController().popBackStack()
-                        }
-                    }
-                    .setNegativeButton("取消", null)
-                    .show()
+
                 true
             }
 
             R.id.action_ai -> {
-                detailViewModel.aiSummery(memoId)
+
                 true
             }
 
@@ -85,72 +132,65 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
     }
 
     override fun bindListener() {
-        binding.fab.setOnClickListener {
-            //TODO 带着参数跳转到下一个界面
-            val bundle = Bundle().apply {
-                putInt("memo_id", memoId)
-            }
-            findNavController()
-                .navigate(R.id.action_DetailFragment_to_EditFragment, bundle)
-        }
-        binding.nestedScrollView.setOnScrollChangeListener { v: NestedScrollView, _, scrollY, _, oldScrollY ->
-            // 判断是否滑动到底部
-            val isAtBottom = v.getChildAt(0)?.let { child ->
-                v.height + scrollY >= child.height
-            } == true
+        binding.contentEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
 
-            if (isAtBottom) {
-                binding.fab.hide()
-            } else {
-                binding.fab.show()
             }
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                binding.sendBtn.isEnabled = s?.isNotEmpty() == true
+            }
+
+        })
+        binding.sendBtn.setOnClickListener {
+            val content = binding.contentEt.text
+            chatViewModel.chat(content.toString())
         }
     }
 
     override fun bindFlow() {
         lifecycleOnRepeat {
-            detailViewModel.dataFlow.collect {
-                it?.let {
-                    binding.contentDetailTv.text = buildString {
-                        append(it.content)
-                        append("\n")
-                        if (it.aiSummary.isNotEmpty()) {
-                            append("deepSeek总结：\n")
-                            append(it.aiSummary)
-                        }
+            chatViewModel.chatContentFlow
+                .collect {
+                    if (it.first == NetState.Start) {
+                        binding.contentEt.setText("")
+                        data.clear()
+                        data.addAll(it.second)
+                        adapter.notifyDataSetChanged()
+                    } else if (it.first == NetState.Loading) {
+//                        loadAiSummaryDialog.show()
+                        data.clear()
+                        data.addAll(it.second)
+                        adapter.notifyDataSetChanged()
+                    } else if (it.first == NetState.Complete) {
+//                        loadAiSummaryDialog.dismiss()
+                        data.clear()
+                        data.addAll(it.second)
+                        adapter.notifyDataSetChanged()
                     }
                 }
-            }
         }
-        lifecycleOnRepeat {
-            detailViewModel.aiSummaryFlow.collect {
-                if (it.second.isNotEmpty()) {
-                    MaterialAlertDialogBuilder(requireActivity())
-                        .setTitle("总结内容")
-                        .setMessage(it.second)
-                        .setPositiveButton("收藏") { _, _ ->
-                            // 确定按钮点击事件
-                            detailViewModel.collection(memoId) {
-                                Toast.makeText(
-                                    this@ChatFragment.context, R.string.collection_success,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                        .setNegativeButton("取消", null)
-                        .show()
-                }
 
-            }
-        }
     }
 
     private val memoId by lazy { arguments?.getInt("memo_id") ?: -1 }
     override fun initData(view: View, savedInstanceState: Bundle?) {
         super.initData(view, savedInstanceState)
-        lifecycle.addObserver(detailViewModel)
-        detailViewModel.requestData(memoId)
-
+        lifecycle.addObserver(chatViewModel)
     }
 }
 

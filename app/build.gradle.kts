@@ -34,6 +34,12 @@ android {
             "DEEPSEEK_API_KEY",
             "\"${localProperties.getProperty("deepseek.api.key")}\""
         )
+        //与数据库中的exportSchema = true,// 关闭 Schema 导出（生产环境建议开启）有关
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+            }
+        }
     }
 
     buildTypes {
@@ -76,6 +82,9 @@ android {
             }
         }
     }
+}
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {

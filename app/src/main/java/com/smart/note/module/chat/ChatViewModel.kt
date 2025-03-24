@@ -1,30 +1,22 @@
 package com.smart.note.module.chat
 
 import android.app.Application
-import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.smart.basic.viewmodel.BaseViewModel
 import com.smart.note.App
-import com.smart.note.R
-import com.smart.note.data.Memo
 import com.smart.note.data.NetState
-import com.smart.note.ext.md5
-import com.smart.note.model.ChatContent
-import com.smart.note.net.ApiService
+import com.smart.note.data.ChatDetail
 import com.smart.note.repository.ChatRepository
 import com.smart.note.room.MemoDao
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
@@ -34,10 +26,10 @@ class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
 
     @Inject
     lateinit var chatRepository: ChatRepository
-    private val chatList = mutableListOf<ChatContent>()
+    private val chatList = mutableListOf<ChatDetail>()
 
     private val _chatContentFLow =
-        MutableStateFlow<Pair<NetState, MutableList<ChatContent>>>(NetState.Default to chatList)
+        MutableStateFlow<Pair<NetState, MutableList<ChatDetail>>>(NetState.Default to chatList)
     val chatContentFlow = _chatContentFLow.asStateFlow()
 
     init {
@@ -60,13 +52,13 @@ class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
             chatRepository.sendMessage(content)
                 .catch {
                     _chatContentFLow.value = NetState.Complete to chatList.apply {
-                        add(ChatContent(1, " 加载失败"))
+                        add(ChatDetail(type = 1, content = " 加载失败"))
                     }
                 }
                 .onStart {
                     _chatContentFLow.value =
                         (NetState.Start to chatList.apply {
-                            add(ChatContent(0, content))
+                            add(ChatDetail(type = 0, content = content))
                         })
 
                 }
@@ -76,11 +68,11 @@ class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
                 .collect {
                     if (it.choices.isNotEmpty()) {
                         _chatContentFLow.value = NetState.Complete to chatList.apply {
-                            add(ChatContent(1, it.choices[0].message.content))
+                            add(ChatDetail(type = 1, content = it.choices[0].message.content))
                         }
                     } else {
                         _chatContentFLow.value = NetState.Complete to chatList.apply {
-                            add(ChatContent(1, " 加载失败"))
+                            add(ChatDetail(type = 1, content = " 加载失败"))
                         }
                     }
 

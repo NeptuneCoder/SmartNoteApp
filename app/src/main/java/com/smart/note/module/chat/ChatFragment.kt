@@ -11,26 +11,18 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.widget.NestedScrollView
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
 import com.smart.note.data.NetState
 import com.smart.note.databinding.FragmentChatBinding
-import com.smart.note.databinding.FragmentDetailBinding
-import com.smart.note.databinding.ItemCardViewBinding
 import com.smart.note.databinding.ItemChatViewBinding
 import com.smart.note.ext.formatMillisToDateTime
 import com.smart.note.ext.lifecycleOnRepeat
-import com.smart.note.model.ChatContent
-import com.smart.note.module.detail.DetailViewModel
-import com.smart.note.module.main.HomeFragment.ItemCardViewHolder
+import com.smart.note.data.ChatDetail
 import javax.inject.Inject
 
 
@@ -45,7 +37,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
     @Inject
     lateinit var loadAiSummaryDialog: AlertDialog
 
-    private val data = mutableListOf<ChatContent>()
+    private val data = mutableListOf<ChatDetail>()
     private val adapter by lazy { ChatAdapter(data) }
     override fun inject() {
         super.inject()
@@ -71,7 +63,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         binding.recycleView.adapter = adapter
     }
 
-    private class ChatAdapter(val data: MutableList<ChatContent>) :
+    private class ChatAdapter(val data: MutableList<ChatDetail>) :
         RecyclerView.Adapter<ChatViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -101,7 +93,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
 
     class ChatViewHolder(private val binding: ItemChatViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: ChatContent) {
+        fun bindData(data: ChatDetail) {
             binding.contentTv.text = data.content
             binding.timeTv.text = data.createTime.formatMillisToDateTime()
             binding.aiTv.text = if (data.type == 0) "Sf" else "AI"

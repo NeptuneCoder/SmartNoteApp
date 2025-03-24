@@ -97,7 +97,7 @@ class DetailViewModel @Inject constructor(private val app: Application) : BaseVi
 
 
             } else {
-                _aiSummaryFlow.value = State.Complete to ""
+                _aiSummaryFlow.value = State.Default to ""
                 _aiSummaryFlow.value = State.Complete to (data?.aiSummary ?: "没有内容")
             }
 

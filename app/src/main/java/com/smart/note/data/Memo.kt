@@ -16,7 +16,7 @@ data class Memo(
     @ColumnInfo("md5")
     var md5: String,
     @ColumnInfo("msg_type")
-    val msgType: Int = 0,
+    val msgType: Int = Type.NOTE.ordinal,
     @ColumnInfo("create_time")
     val createTime: Long = System.currentTimeMillis(),
     @ColumnInfo("update_time")

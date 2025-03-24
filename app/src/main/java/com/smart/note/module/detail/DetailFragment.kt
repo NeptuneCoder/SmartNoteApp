@@ -135,20 +135,22 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
                     loadAiSummaryDialog.show()
                 } else if (it.first == State.Complete) {
                     loadAiSummaryDialog.dismiss()
-                    MaterialAlertDialogBuilder(requireActivity())
-                        .setTitle("总结内容")
-                        .setMessage(it.second)
-                        .setPositiveButton("收藏") { _, _ ->
-                            // 确定按钮点击事件
-                            detailViewModel.collection(memoId) {
-                                Toast.makeText(
-                                    this@DetailFragment.context, R.string.collection_success,
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                    if (it.second.isNotEmpty()) {
+                        MaterialAlertDialogBuilder(requireActivity())
+                            .setTitle("总结内容")
+                            .setMessage(it.second)
+                            .setPositiveButton("收藏") { _, _ ->
+                                // 确定按钮点击事件
+                                detailViewModel.collection(memoId) {
+                                    Toast.makeText(
+                                        this@DetailFragment.context, R.string.collection_success,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-                        }
-                        .setNegativeButton("取消", null)
-                        .show()
+                            .setNegativeButton("取消", null)
+                            .show()
+                    }
                 } else if (it.first == State.Error) {
                     loadAiSummaryDialog.dismiss()
                     Toast.makeText(requireActivity(), "加载失败", Toast.LENGTH_SHORT).show()

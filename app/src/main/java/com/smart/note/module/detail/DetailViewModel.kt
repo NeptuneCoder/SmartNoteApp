@@ -9,8 +9,7 @@ import com.smart.basic.viewmodel.BaseViewModel
 import com.smart.note.App
 import com.smart.note.R
 import com.smart.note.data.Memo
-import com.smart.note.ext.md5
-import com.smart.note.net.ApiService
+import com.smart.note.data.NetState
 import com.smart.note.repository.ChatRepository
 import com.smart.note.room.MemoDao
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 class DetailViewModel @Inject constructor(private val app: Application) : BaseViewModel(app),
@@ -33,7 +31,7 @@ class DetailViewModel @Inject constructor(private val app: Application) : BaseVi
     val dataFlow = _dataFlow.asStateFlow()
 
 
-    private val _aiSummaryFlow = MutableStateFlow<Pair<State, String>>(State.Default to "")
+    private val _aiSummaryFlow = MutableStateFlow<Pair<NetState, String>>(NetState.Default to "")
     val aiSummaryFlow = _aiSummaryFlow.asStateFlow()
 
     @Inject
@@ -77,28 +75,28 @@ class DetailViewModel @Inject constructor(private val app: Application) : BaseVi
                 chatRepository.sendMessage("帮我总结一下内容:${data.content}")
                     .onStart {
                         Log.i("chatRepository", "onStart")
-                        _aiSummaryFlow.value = State.Loading to ""
+                        _aiSummaryFlow.value = NetState.Loading to ""
                     }
                     .onCompletion {
                         Log.i("chatRepository", "onCompletion")
                     }
                     .catch {
                         Log.i("chatRepository", "catch")
-                        _aiSummaryFlow.value = State.Error to ""
+                        _aiSummaryFlow.value = NetState.Error to ""
                     }
                     .collect {
                         Log.i("chatRepository", "chatRepository res ==== $it")
                         if (it.choices.isNotEmpty()) {
-                            _aiSummaryFlow.value = State.Complete to it.choices[0].message.content
+                            _aiSummaryFlow.value = NetState.Complete to it.choices[0].message.content
                         } else {
-                            _aiSummaryFlow.value = State.Complete to "没有内容"
+                            _aiSummaryFlow.value = NetState.Complete to "没有内容"
                         }
                     }
 
 
             } else {
-                _aiSummaryFlow.value = State.Default to ""
-                _aiSummaryFlow.value = State.Complete to (data?.aiSummary ?: "没有内容")
+                _aiSummaryFlow.value = NetState.Default to ""
+                _aiSummaryFlow.value = NetState.Complete to (data?.aiSummary ?: "没有内容")
             }
 
 

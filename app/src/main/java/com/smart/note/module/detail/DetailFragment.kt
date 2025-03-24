@@ -1,6 +1,5 @@
 package com.smart.note.module.detail
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
+import com.smart.note.data.NetState
 import com.smart.note.databinding.FragmentDetailBinding
 import com.smart.note.ext.lifecycleOnRepeat
 import javax.inject.Inject
@@ -131,9 +131,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         }
         lifecycleOnRepeat {
             detailViewModel.aiSummaryFlow.collect {
-                if (it.first == State.Loading) {
+                if (it.first == NetState.Loading) {
                     loadAiSummaryDialog.show()
-                } else if (it.first == State.Complete) {
+                } else if (it.first == NetState.Complete) {
                     loadAiSummaryDialog.dismiss()
                     if (it.second.isNotEmpty()) {
                         MaterialAlertDialogBuilder(requireActivity())
@@ -151,7 +151,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
                             .setNegativeButton("取消", null)
                             .show()
                     }
-                } else if (it.first == State.Error) {
+                } else if (it.first == NetState.Error) {
                     loadAiSummaryDialog.dismiss()
                     Toast.makeText(requireActivity(), "加载失败", Toast.LENGTH_SHORT).show()
                 }

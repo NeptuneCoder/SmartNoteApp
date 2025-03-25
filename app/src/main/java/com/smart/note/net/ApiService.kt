@@ -4,6 +4,7 @@ import com.smart.note.model.ChatRequest
 import com.smart.note.model.ChatResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.Headers
@@ -20,5 +21,12 @@ interface ApiService {
     fun streamChat(
         @Body request: ChatRequest
     ): Call<ResponseBody> // 直接返回 ResponseBody
+
+    @Headers("Content-Type: application/json")
+    @POST("chat/completions")
+    fun streamChat2(
+        @Body request: ChatRequest
+    ): Response<ResponseBody> // 直接返回 ResponseBody
+
 
 }

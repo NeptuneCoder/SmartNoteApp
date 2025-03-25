@@ -91,6 +91,20 @@ class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
 
         viewModelScope.launch(Dispatchers.IO) {
             chatRepository.chatStream(content)
+                .onStart {
+                    _chatContentFLow.value =
+                        (NetState.Start to chatList.apply {
+                            add(ChatDetail(type = 0, content = content))
+                        })
+                }
+                .catch {
+                    _chatContentFLow.value = NetState.Complete to chatList.apply {
+                        add(ChatDetail(type = 1, content = " 加载失败"))
+                    }
+                }
+                .collect {
+                    Log.i("chatStream", "chatStream === " + it)
+                }
         }
 
 

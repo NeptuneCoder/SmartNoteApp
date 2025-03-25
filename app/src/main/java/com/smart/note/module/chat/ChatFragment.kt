@@ -151,7 +151,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         binding.sendBtn.setOnClickListener {
             val content = binding.contentEt.text
             chatViewModel.chat(content.toString())
-            chatViewModel.chatStream(content.toString())
+//            chatViewModel.chatStream(content.toString())
         }
     }
 

@@ -151,6 +151,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         binding.sendBtn.setOnClickListener {
             val content = binding.contentEt.text
             chatViewModel.chat(content.toString())
+            chatViewModel.chatStream(content.toString())
         }
     }
 
@@ -163,16 +164,19 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
                         data.clear()
                         data.addAll(it.second)
                         adapter.notifyDataSetChanged()
+                        binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
                     } else if (it.first == NetState.Loading) {
 //                        loadAiSummaryDialog.show()
                         data.clear()
                         data.addAll(it.second)
                         adapter.notifyDataSetChanged()
+                        binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
                     } else if (it.first == NetState.Complete) {
 //                        loadAiSummaryDialog.dismiss()
                         data.clear()
                         data.addAll(it.second)
                         adapter.notifyDataSetChanged()
+                        binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
                     }
                 }
         }

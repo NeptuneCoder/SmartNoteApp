@@ -9,14 +9,18 @@ import com.smart.basic.viewmodel.BaseViewModel
 import com.smart.note.App
 import com.smart.note.data.NetState
 import com.smart.note.data.ChatDetail
+import com.smart.note.model.ChatRequest
+import com.smart.note.model.Message
 import com.smart.note.repository.ChatRepository
 import com.smart.note.room.MemoDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
@@ -78,6 +82,18 @@ class ChatViewModel @Inject constructor(app: Application) : BaseViewModel(app),
 
                 }
         }
+
+
+    }
+
+    fun chatStream(content: String) {
+        // 在 ViewModel 或 Presenter 中
+
+        viewModelScope.launch(Dispatchers.IO) {
+            chatRepository.chatStream(content)
+        }
+
+
     }
 
 }

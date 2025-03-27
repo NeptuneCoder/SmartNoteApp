@@ -1,5 +1,8 @@
 # SmartNoteApp
 
+### 项目配置
+在local.properties中配置自己的deepseek.api.key=****，地址为：https://platform.deepseek.com/usage
+
 ##### 路由导航跳转
 
 //findNavController().navigate(R.id.action_HomeFragment_to_EditFragment)

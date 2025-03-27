@@ -38,6 +38,8 @@
             android:paddingLeft="6dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
+            android:textColor="@color/et_text_color"
+            android:textColorHint="@color/hint_text_color"
             android:textSize="@dimen/dimen_sp_13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

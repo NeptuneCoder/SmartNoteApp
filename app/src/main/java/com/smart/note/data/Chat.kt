@@ -19,3 +19,15 @@ data class ChatDetail(
     @ColumnInfo("create_time")
     val createTime: Long = System.currentTimeMillis()
 )
+
+
+data class ChatData(
+    val id: Int = 0,
+    var netState: NetState = NetState.Default,
+    var content: String = "",
+    val type: Int = 0,
+    val topicId: String = "",
+    val topicName: String = "",
+    val chat: MutableList<String> = mutableListOf<String>(),
+    val createTime: Long = System.currentTimeMillis()
+)

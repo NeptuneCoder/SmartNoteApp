@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.smart.basic.fragment.BaseFragment
 import com.smart.note.App
 import com.smart.note.R
+import com.smart.note.data.ChatData
 import com.smart.note.data.NetState
 import com.smart.note.databinding.FragmentChatBinding
 import com.smart.note.databinding.ItemChatViewBinding
@@ -37,7 +38,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
     @Inject
     lateinit var loadAiSummaryDialog: AlertDialog
 
-    private val data = mutableListOf<ChatDetail>()
+    private val data = mutableListOf<ChatData>()
     private val adapter by lazy { ChatAdapter(data) }
     override fun inject() {
         super.inject()
@@ -63,7 +64,21 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         binding.recycleView.adapter = adapter
     }
 
-    private class ChatAdapter(val data: MutableList<ChatDetail>) :
+    override fun onKeyboardOpened(keyboardHeight: Int) {
+        // 键盘弹出时滚动 RecyclerView
+        binding.recycleView.post {
+            if (data.isNotEmpty()) {
+                binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
+            }
+        }
+    }
+
+    override fun onKeyboardClosed() {
+        // 键盘收起时清理焦点
+        binding.contentEt.clearFocus()
+    }
+
+    private class ChatAdapter(val data: MutableList<ChatData>) :
         RecyclerView.Adapter<ChatViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -93,8 +108,18 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
 
     class ChatViewHolder(private val binding: ItemChatViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: ChatDetail) {
-            binding.contentTv.text = data.content
+        fun bindData(data: ChatData) {
+//            val chatContent = StringBuilder()
+//            data.chat.forEach {
+//                chatContent.append(it)
+//            }
+            if (data.type == 1 && data.netState == NetState.Loading) {
+                binding.contentTv.text = ""
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+                binding.contentTv.text = data.content
+            }
             binding.timeTv.text = data.createTime.formatMillisToDateTime()
             binding.aiTv.text = if (data.type == 0) "Sf" else "AI"
         }
@@ -150,8 +175,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
         })
         binding.sendBtn.setOnClickListener {
             val content = binding.contentEt.text
-            chatViewModel.chat(content.toString())
 //            chatViewModel.chatStream(content.toString())
+            chatViewModel.chat(content.toString())
         }
     }
 
@@ -162,19 +187,19 @@ class ChatFragment : BaseFragment<FragmentChatBinding>() {
                     if (it.first == NetState.Start) {
                         binding.contentEt.setText("")
                         data.clear()
-                        data.addAll(it.second)
+                        data.addAll(it.second.second)
                         adapter.notifyDataSetChanged()
                         binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
                     } else if (it.first == NetState.Loading) {
 //                        loadAiSummaryDialog.show()
                         data.clear()
-                        data.addAll(it.second)
+                        data.addAll(it.second.second)
                         adapter.notifyDataSetChanged()
                         binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
                     } else if (it.first == NetState.Complete) {
 //                        loadAiSummaryDialog.dismiss()
                         data.clear()
-                        data.addAll(it.second)
+                        data.addAll(it.second.second)
                         adapter.notifyDataSetChanged()
                         binding.recycleView.smoothScrollToPosition(adapter.itemCount - 1)
                     }
